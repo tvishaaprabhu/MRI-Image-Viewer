@@ -5,5 +5,5 @@ img = st.file_uploader("Upload MRI image", type=["jpg", "jpeg", "png"])
  
 if img is not None:
     mri = Image.open(img)
-    st.image(image)
+    st.image(mri)
  
