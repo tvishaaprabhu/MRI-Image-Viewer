@@ -9,10 +9,10 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
-st.title("MRI Image Viewer")
+st.title("My Streamlit Image Viewer")
 
 # --- SECTION 1: DATA UPLOADING ---
-st.header("Data Loading")
+st.header("1. Upload Image")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png", "webp", "dcm"])
 
 if uploaded_file is not None:
@@ -24,7 +24,7 @@ if uploaded_file is not None:
         img_array = cv2.normalize(img_array, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
         width, height = img_array.shape[1], img_array.shape[0]
 
-        st.subheader("Image Info Summary")
+        st.subheader("Image Summary")
         dicom_data = {
             "Attribute": [
                 "File Name", "Width (pixels)", "Height (pixels)", "Format",
@@ -56,7 +56,7 @@ if uploaded_file is not None:
         format_label = img.format
         width, height = img.size
 
-        st.subheader("Image Info Summary")
+        st.subheader("Image Summary")
         data = {
             "Attribute": ["File Name", "Width (pixels)", "Height (pixels)", "Format"],
             "Value": [uploaded_file.name, width, height, format_label]
@@ -67,7 +67,7 @@ if uploaded_file is not None:
     st.divider()
 
     # --- SECTION 2: IMAGE PREPROCESSING ---
-    st.header("Image Preprocessing")
+    st.header("2. Image Preprocessing")
     normalize = st.checkbox("Normalize (0-255)")
     rescale = st.checkbox("Rescale (0-1)")
     equalize = st.checkbox("Histogram Equalization (brain-masked)")
@@ -112,19 +112,27 @@ if uploaded_file is not None:
     st.divider()
 
     # --- SECTION 3: DENOISING ---
-    st.header("Denoising")
+    st.header("3. Denoising")
     gaussian = st.checkbox("Gaussian Blur")
+    if gaussian:
+        gaussian_k = st.slider("Gaussian Kernel Size", min_value=1, max_value=15, value=5, step=2)
+
     median = st.checkbox("Median Filter")
+    if median:
+        median_k = st.slider("Median Kernel Size", min_value=1, max_value=15, value=5, step=2)
+
     nlm = st.checkbox("Non-Local Means Denoising")
+    if nlm:
+        nlm_h = st.slider("NLM Filter Strength (h)", min_value=1, max_value=30, value=10)
 
     denoised = preprocessed.copy()
 
     if gaussian:
-        denoised = cv2.GaussianBlur(denoised, (5, 5), 0)
+        denoised = cv2.GaussianBlur(denoised, (gaussian_k, gaussian_k), 0)
     if median:
-        denoised = cv2.medianBlur(denoised, 5)
+        denoised = cv2.medianBlur(denoised, median_k)
     if nlm:
-        denoised = cv2.fastNlMeansDenoising(denoised, h=10)
+        denoised = cv2.fastNlMeansDenoising(denoised, h=nlm_h)
 
     col1, col2 = st.columns(2)
     with col1:
@@ -146,7 +154,7 @@ if uploaded_file is not None:
     st.divider()
 
     # --- SECTION 4: K-MEANS CLUSTERING ---
-    st.header("K-Means Clustering")
+    st.header("4. K-Means Clustering")
     k = st.slider("Number of clusters (K)", min_value=2, max_value=20, value=10)
     run_kmeans = st.button("Run K-Means")
 
@@ -157,12 +165,15 @@ if uploaded_file is not None:
             labels = km.fit_predict(pixel_list)
             segmented_img = labels.reshape(denoised.shape)
 
-            fig, ax = plt.subplots(figsize=(10, 8))
+            fig, ax = plt.subplots(figsize=(5, 4))
             im = ax.imshow(segmented_img, cmap='nipy_spectral')
             plt.colorbar(im, ax=ax, label='Cluster ID')
-            ax.set_title(f"KMeans Anatomical Mapping (K={k})", fontsize=16)
+            ax.set_title(f"KMeans Anatomical Mapping (K={k})", fontsize=12)
             ax.axis('off')
-            st.pyplot(fig)
+
+            col1, col2, col3 = st.columns([1, 2, 1])
+            with col2:
+                st.pyplot(fig)
 
             buf3 = io.BytesIO()
             fig.savefig(buf3, format="PNG", bbox_inches='tight')
