@@ -5,3 +5,5 @@ pandas
 opencv-python-headless
 numpy
 pydicom
+scikit-learn
+matplotlib
