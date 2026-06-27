@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
-st.title("My Streamlit Image Viewer")
+st.title("MRI Image Viewer")
 
 # --- SECTION 1: DATA UPLOADING ---
 st.header("1. Upload Image")
