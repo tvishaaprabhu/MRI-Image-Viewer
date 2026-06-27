@@ -12,7 +12,7 @@ st.set_page_config(layout="wide")
 st.title("MRI Image Viewer")
 
 # --- SECTION 1: DATA UPLOADING ---
-st.header("1. Upload Image")
+st.header("Data Loading")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png", "webp", "dcm"])
 
 if uploaded_file is not None:
@@ -24,7 +24,7 @@ if uploaded_file is not None:
         img_array = cv2.normalize(img_array, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
         width, height = img_array.shape[1], img_array.shape[0]
 
-        st.subheader("Image Summary")
+        st.subheader("Image Info Summary")
         dicom_data = {
             "Attribute": [
                 "File Name", "Width (pixels)", "Height (pixels)", "Format",
@@ -56,7 +56,7 @@ if uploaded_file is not None:
         format_label = img.format
         width, height = img.size
 
-        st.subheader("Image Summary")
+        st.subheader("Image Info Summary")
         data = {
             "Attribute": ["File Name", "Width (pixels)", "Height (pixels)", "Format"],
             "Value": [uploaded_file.name, width, height, format_label]
@@ -67,7 +67,7 @@ if uploaded_file is not None:
     st.divider()
 
     # --- SECTION 2: IMAGE PREPROCESSING ---
-    st.header("2. Image Preprocessing")
+    st.header("Image Preprocessing")
     normalize = st.checkbox("Normalize (0-255)")
     rescale = st.checkbox("Rescale (0-1)")
     equalize = st.checkbox("Histogram Equalization (brain-masked)")
@@ -112,7 +112,7 @@ if uploaded_file is not None:
     st.divider()
 
     # --- SECTION 3: DENOISING ---
-    st.header("3. Denoising")
+    st.header("Denoising")
     gaussian = st.checkbox("Gaussian Blur")
     median = st.checkbox("Median Filter")
     nlm = st.checkbox("Non-Local Means Denoising")
@@ -146,7 +146,7 @@ if uploaded_file is not None:
     st.divider()
 
     # --- SECTION 4: K-MEANS CLUSTERING ---
-    st.header("4. K-Means Clustering")
+    st.header("K-Means Clustering")
     k = st.slider("Number of clusters (K)", min_value=2, max_value=20, value=10)
     run_kmeans = st.button("Run K-Means")
 
