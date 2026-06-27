@@ -16,13 +16,13 @@ uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png
 if uploaded_file is not None:
     if uploaded_file.name.endswith(".dcm"):
         dicom = pydicom.dcmread(uploaded_file)
-        img_array = dicom.pixel_array
+        img_array = dicom.pixel_array.squeeze()
         img_array = cv2.normalize(img_array, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
         format_label = "DICOM"
         width, height = img_array.shape[1], img_array.shape[0]
     else:
         img = Image.open(uploaded_file)
-        img_array = np.array(img.convert("L"))
+        img_array = np.array(img.convert("L")).squeeze()
         format_label = img.format
         width, height = img.size
 
