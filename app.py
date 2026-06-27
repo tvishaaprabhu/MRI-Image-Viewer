@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 import cv2
+import io
 
 st.set_page_config(layout="wide")
 st.title("My Streamlit Image Viewer")
@@ -57,8 +58,25 @@ if uploaded_file is not None:
 
     st.divider()
 
-    # --- SECTION 3: IMAGE COMPARISON ---
-    st.header("3. Image Comparison")
+    # --- SECTION 3: DENOISING ---
+    st.header("3. Denoising")
+    gaussian = st.checkbox("Gaussian Blur")
+    median = st.checkbox("Median Filter")
+    nlm = st.checkbox("Non-Local Means Denoising")
+
+    if gaussian:
+        processed = cv2.GaussianBlur(processed, (5, 5), 0)
+
+    if median:
+        processed = cv2.medianBlur(processed, 5)
+
+    if nlm:
+        processed = cv2.fastNlMeansDenoising(processed, h=10)
+
+    st.divider()
+
+    # --- SECTION 4: IMAGE COMPARISON ---
+    st.header("4. Image Comparison")
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Original")
@@ -66,6 +84,19 @@ if uploaded_file is not None:
     with col2:
         st.subheader("Processed")
         st.image(processed, use_column_width=True)
+
+    st.divider()
+
+    # --- SECTION 5: DOWNLOAD ---
+    st.header("5. Download Processed Image")
+    buf = io.BytesIO()
+    Image.fromarray(processed).save(buf, format="PNG")
+    st.download_button(
+        label="Download Processed Image",
+        data=buf.getvalue(),
+        file_name="processed_" + uploaded_file.name.rsplit(".", 1)[0] + ".png",
+        mime="image/png"
+    )
 
 else:
     st.info("Please upload an image to see it displayed here.")
