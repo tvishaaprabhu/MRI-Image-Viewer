@@ -4,22 +4,32 @@ import numpy as np
 from PIL import Image
 import cv2
 import io
+import pydicom
 
 st.set_page_config(layout="wide")
 st.title("My Streamlit Image Viewer")
 
 # --- SECTION 1: DATA UPLOADING ---
 st.header("1. Upload Image")
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png", "webp"])
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png", "webp", "dcm"])
 
 if uploaded_file is not None:
-    img = Image.open(uploaded_file)
-    img_array = np.array(img.convert("L"))
+    if uploaded_file.name.endswith(".dcm"):
+        dicom = pydicom.dcmread(uploaded_file)
+        img_array = dicom.pixel_array
+        img_array = cv2.normalize(img_array, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+        format_label = "DICOM"
+        width, height = img_array.shape[1], img_array.shape[0]
+    else:
+        img = Image.open(uploaded_file)
+        img_array = np.array(img.convert("L"))
+        format_label = img.format
+        width, height = img.size
 
     st.subheader("Image Summary")
     data = {
         "Attribute": ["File Name", "Width (pixels)", "Height (pixels)", "Format"],
-        "Value": [uploaded_file.name, img.size[0], img.size[1], img.format]
+        "Value": [uploaded_file.name, width, height, format_label]
     }
     df = pd.DataFrame(data)
     st.dataframe(df, hide_index=True, use_container_width=False)
