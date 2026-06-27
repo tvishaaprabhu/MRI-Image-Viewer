@@ -5,6 +5,8 @@ from PIL import Image
 import cv2
 import io
 import pydicom
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
 st.title("My Streamlit Image Viewer")
@@ -97,8 +99,29 @@ if uploaded_file is not None:
 
     st.divider()
 
-    # --- SECTION 5: DOWNLOAD ---
-    st.header("5. Download Processed Image")
+    # --- SECTION 5: K-MEANS CLUSTERING ---
+    st.header("5. K-Means Clustering")
+    k = st.slider("Number of clusters (K)", min_value=2, max_value=20, value=10)
+    run_kmeans = st.button("Run K-Means")
+
+    if run_kmeans:
+        with st.spinner("Running K-Means..."):
+            pixel_list = processed.reshape((-1, 1)).astype(np.float32)
+            km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+            labels = km.fit_predict(pixel_list)
+            segmented_img = labels.reshape(processed.shape)
+
+            fig, ax = plt.subplots(figsize=(10, 8))
+            im = ax.imshow(segmented_img, cmap='nipy_spectral')
+            plt.colorbar(im, ax=ax, label='Cluster ID')
+            ax.set_title(f"KMeans Anatomical Mapping (K={k})", fontsize=16)
+            ax.axis('off')
+            st.pyplot(fig)
+
+    st.divider()
+
+    # --- SECTION 6: DOWNLOAD ---
+    st.header("6. Download Processed Image")
     buf = io.BytesIO()
     Image.fromarray(processed).save(buf, format="PNG")
     st.download_button(
