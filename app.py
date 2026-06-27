@@ -16,25 +16,53 @@ st.header("1. Upload Image")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png", "webp", "dcm"])
 
 if uploaded_file is not None:
-    if uploaded_file.name.endswith(".dcm"):
+    is_dicom = uploaded_file.name.endswith(".dcm")
+
+    if is_dicom:
         dicom = pydicom.dcmread(uploaded_file)
         img_array = dicom.pixel_array.squeeze()
         img_array = cv2.normalize(img_array, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
-        format_label = "DICOM"
         width, height = img_array.shape[1], img_array.shape[0]
+
+        st.subheader("Image Summary")
+        dicom_data = {
+            "Attribute": [
+                "File Name", "Width (pixels)", "Height (pixels)", "Format",
+                "Patient Name", "Patient ID", "Modality", "Study Date",
+                "Institution", "Manufacturer", "Rows", "Columns",
+                "Pixel Spacing", "Slice Thickness", "Bits Stored"
+            ],
+            "Value": [
+                uploaded_file.name, width, height, "DICOM",
+                str(getattr(dicom, "PatientName", "N/A")),
+                str(getattr(dicom, "PatientID", "N/A")),
+                str(getattr(dicom, "Modality", "N/A")),
+                str(getattr(dicom, "StudyDate", "N/A")),
+                str(getattr(dicom, "InstitutionName", "N/A")),
+                str(getattr(dicom, "Manufacturer", "N/A")),
+                str(getattr(dicom, "Rows", "N/A")),
+                str(getattr(dicom, "Columns", "N/A")),
+                str(getattr(dicom, "PixelSpacing", "N/A")),
+                str(getattr(dicom, "SliceThickness", "N/A")),
+                str(getattr(dicom, "BitsStored", "N/A")),
+            ]
+        }
+        df = pd.DataFrame(dicom_data)
+        st.dataframe(df, hide_index=True, use_container_width=False)
+
     else:
         img = Image.open(uploaded_file)
         img_array = np.array(img.convert("L")).squeeze()
         format_label = img.format
         width, height = img.size
 
-    st.subheader("Image Summary")
-    data = {
-        "Attribute": ["File Name", "Width (pixels)", "Height (pixels)", "Format"],
-        "Value": [uploaded_file.name, width, height, format_label]
-    }
-    df = pd.DataFrame(data)
-    st.dataframe(df, hide_index=True, use_container_width=False)
+        st.subheader("Image Summary")
+        data = {
+            "Attribute": ["File Name", "Width (pixels)", "Height (pixels)", "Format"],
+            "Value": [uploaded_file.name, width, height, format_label]
+        }
+        df = pd.DataFrame(data)
+        st.dataframe(df, hide_index=True, use_container_width=False)
 
     st.divider()
 
@@ -46,27 +74,40 @@ if uploaded_file is not None:
     flip = st.checkbox("Horizontal Flip")
     rotate = st.checkbox("Rotate 90°")
 
-    processed = img_array.copy()
+    preprocessed = img_array.copy()
 
     if normalize:
-        processed = cv2.normalize(processed, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
-
+        preprocessed = cv2.normalize(preprocessed, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
     if rescale:
-        processed = (processed / 255.0 * 255).astype(np.uint8)
-
+        preprocessed = (preprocessed / 255.0 * 255).astype(np.uint8)
     if equalize:
-        processed_eq = processed.copy()
+        processed_eq = preprocessed.copy()
         mask = processed_eq > 15
         brain_pixels = processed_eq[mask]
         brain_eq = cv2.equalizeHist(brain_pixels.reshape(-1, 1))
         processed_eq[mask] = brain_eq.ravel()
-        processed = processed_eq
-
+        preprocessed = processed_eq
     if flip:
-        processed = cv2.flip(processed, 1)
-
+        preprocessed = cv2.flip(preprocessed, 1)
     if rotate:
-        processed = cv2.rotate(processed, cv2.ROTATE_90_CLOCKWISE)
+        preprocessed = cv2.rotate(preprocessed, cv2.ROTATE_90_CLOCKWISE)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Original")
+        st.image(img_array, use_container_width=True)
+    with col2:
+        st.subheader("Preprocessed")
+        st.image(preprocessed, use_container_width=True)
+
+    buf1 = io.BytesIO()
+    Image.fromarray(preprocessed).save(buf1, format="PNG")
+    st.download_button(
+        label="Download Preprocessed Image",
+        data=buf1.getvalue(),
+        file_name="preprocessed_" + uploaded_file.name.rsplit(".", 1)[0] + ".png",
+        mime="image/png"
+    )
 
     st.divider()
 
@@ -76,40 +117,45 @@ if uploaded_file is not None:
     median = st.checkbox("Median Filter")
     nlm = st.checkbox("Non-Local Means Denoising")
 
+    denoised = preprocessed.copy()
+
     if gaussian:
-        processed = cv2.GaussianBlur(processed, (5, 5), 0)
-
+        denoised = cv2.GaussianBlur(denoised, (5, 5), 0)
     if median:
-        processed = cv2.medianBlur(processed, 5)
-
+        denoised = cv2.medianBlur(denoised, 5)
     if nlm:
-        processed = cv2.fastNlMeansDenoising(processed, h=10)
+        denoised = cv2.fastNlMeansDenoising(denoised, h=10)
 
-    st.divider()
-
-    # --- SECTION 4: IMAGE COMPARISON ---
-    st.header("4. Image Comparison")
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("Original")
-        st.image(img_array, use_container_width=True)
+        st.subheader("Preprocessed")
+        st.image(preprocessed, use_container_width=True)
     with col2:
-        st.subheader("Processed")
-        st.image(processed, use_container_width=True)
+        st.subheader("Denoised")
+        st.image(denoised, use_container_width=True)
+
+    buf2 = io.BytesIO()
+    Image.fromarray(denoised).save(buf2, format="PNG")
+    st.download_button(
+        label="Download Denoised Image",
+        data=buf2.getvalue(),
+        file_name="denoised_" + uploaded_file.name.rsplit(".", 1)[0] + ".png",
+        mime="image/png"
+    )
 
     st.divider()
 
-    # --- SECTION 5: K-MEANS CLUSTERING ---
-    st.header("5. K-Means Clustering")
+    # --- SECTION 4: K-MEANS CLUSTERING ---
+    st.header("4. K-Means Clustering")
     k = st.slider("Number of clusters (K)", min_value=2, max_value=20, value=10)
     run_kmeans = st.button("Run K-Means")
 
     if run_kmeans:
         with st.spinner("Running K-Means..."):
-            pixel_list = processed.reshape((-1, 1)).astype(np.float32)
+            pixel_list = denoised.reshape((-1, 1)).astype(np.float32)
             km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
             labels = km.fit_predict(pixel_list)
-            segmented_img = labels.reshape(processed.shape)
+            segmented_img = labels.reshape(denoised.shape)
 
             fig, ax = plt.subplots(figsize=(10, 8))
             im = ax.imshow(segmented_img, cmap='nipy_spectral')
@@ -118,18 +164,14 @@ if uploaded_file is not None:
             ax.axis('off')
             st.pyplot(fig)
 
-    st.divider()
-
-    # --- SECTION 6: DOWNLOAD ---
-    st.header("6. Download Processed Image")
-    buf = io.BytesIO()
-    Image.fromarray(processed).save(buf, format="PNG")
-    st.download_button(
-        label="Download Processed Image",
-        data=buf.getvalue(),
-        file_name="processed_" + uploaded_file.name.rsplit(".", 1)[0] + ".png",
-        mime="image/png"
-    )
+            buf3 = io.BytesIO()
+            fig.savefig(buf3, format="PNG", bbox_inches='tight')
+            st.download_button(
+                label="Download K-Means Image",
+                data=buf3.getvalue(),
+                file_name="kmeans_" + uploaded_file.name.rsplit(".", 1)[0] + ".png",
+                mime="image/png"
+            )
 
 else:
     st.info("Please upload an image to see it displayed here.")
