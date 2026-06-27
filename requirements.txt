@@ -2,5 +2,5 @@ matplotlib
 Pillow
 streamlit
 pandas
-opencv-python
+opencv-python-headless
 numpy
