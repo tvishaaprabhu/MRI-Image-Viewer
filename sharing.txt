@@ -1,12 +1,13 @@
-[firebase]
-type = "service_account"
-project_id = "mri-image-viewer"
-private_key_id = "11b7724b03927ff90efc826a7e33737d7815a5d6"
-private_key = "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQD6QV0pIWSUHNVj\nMtHDGkUpeSAp3PKtI0JMhs1gKUr0omgxrREUJmPnfOD2Uh46SWdGnB28TLhwc2eF\nAH8yNaQ1pHvuDSEJTtEsxYJWeE4clvUMSzf6sN1EFqxgXxsnlLwejzihmD4dSp3q\nAt9PGxQBmKRUk2hsPr3o4QDwe4mZrbcTdhfChWFpLL+YZlzhU74Iv9E3yP5GBLYn\nG9PB45N3NOU+Cb+F99rFsxjYY87H5TtzvHhtJq9ifqCmH6VCW4uflXjImqTQzDVV\nrGY2orh2jt9YpwJbQvTPg6qk+QrIjYc9UmP/apJWFiJzJhjig+ur5GgIwx5mEp3e\nuPfSlGoXAgMBAAECggEADtt26fG1vxtadH9jDQe6vRnCqz7sWL4ZT2IeFaGYoHR3\nO3fFu0yvgrdFwyn16cpLgNl/jxso72LSmFwCsTBBFamJwq9x235xPwy3eRBpvBse\n5OzJn9mvO+hyscKuYd0GhslETfJewa4ZOPg/BLsb/B+b+09zFCDCH+4ieE8v8051\nsab7+qVok/I+40dqAHEhjJxFjX4aXy9lB6tN+KseLSYYTtMXYDefeQbOhq9/4jW9\nSsPLEwK60rDBG8oczKdKi596XiM9SbmXcB89gRs7jdZ+uoYSpvn5//MyaU1vwMcw\nQNoY1nPXAMC5uwtksVuuQYXm+QK/Bw+wJiYPG2wJ2QKBgQD9s010kCP/xP6OIfYA\nnGNtKGsty13QQQzv0uINpXu1zQj8CQwG0Bi77n0tGg4QDtMVv8G4PFcnUCsvu6C/\nBsp6ytMSKRoG+JdWWBxO9TbRTZ1GFDeg55jGvYa0kp2LcgYy9kDnWW9mpjtWtg4v\nUG3VahrRB4j/2tk3PXbSR5IkuQKBgQD8hhE3b9R56FWdoQ39B0/2I55Uax1MLcEu\n3PiPpRciQtfvxRnpqf7auKm9XngNixfyuNqN6eryRWOmqD8xO7QItgJjRVVWwTJq\nONVBdm0e345ws/uXNCFs2upIzIDdnrt1kUuxUIXWhPDcRLvnSL5O2Yu1lWU8IbTo\nUB5esBM9TwKBgDaaFYyFzUmqA0Nh6ck932RJ869aeqlsprUjBQX83MBHDaz44X7B\n4ODptkUzu10XY7TlnXLigbtzVKgkULdsZb3B02WwNOrVK/UoZ4dS3WZ0tumzRjm6\nPrZfahOJDqFJfC4Rs+xW4lQMaO8Dpc/nFox9FqJwZbrzRhbOgrlFMB35AoGARrOO\nrHPODJfFKM4H6ZkbhTGxybb3y/VfiixqF2XElV4bsVEBEU/8P+bF93Q0rq4L9XRW\nFLeyhURyQx4GG1W48VtsTbkCzLho0h65boumv6cd7WYnAc2hsiWUxO8lAWfI2oDk\nrW97GXW9Lh68cWQHjHISULPUVUKmsQiFiENKD7cCgYB35H5J6zmfBL+7zSa8ca9+\nQ7GZcZ4msjyhYNT8tCoLNu1lTer9Oo8Q7j5amcuCkP+fUEMN6K6EMphQVBPXYFGI\nqtXX+K9cx+covQq6pd2jNB+wQ0PC7/iP4/ccqQr+r853CrLkpgijl068Rus3oIJ2\nA1fIg4NgJYGNwePprcgL9w==\n-----END PRIVATE KEY-----\n"
-client_email = "firebase-adminsdk-fbsvc@mri-image-viewer.iam.gserviceaccount.com"
-client_id = "105305492197932979571"
-auth_uri = "https://accounts.google.com/o/oauth2/auth"
-token_uri = "https://oauth2.googleapis.com/token"
-auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
-client_x509_cert_url = "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40mri-image-viewer.iam.gserviceaccount.com"
-universe_domain = "googleapis.com"
+{
+  "type": "service_account",
+  "project_id": "mri-image-viewer",
+  "private_key_id": "0771552c59787feacc5a7fd624ff0c9ea355dc84",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC+M3C59SKdJ2Nc\ndxnr3dM5UCfs8ubrvnSKAtbNj//PCkbRq5pNaeSN6Olp9Qpcr+7nMSKpEtllDqyx\nyj31WfCp10ZSokwJA0kH4mrk8fRkOCsfu9JtIZxK8OhzPCZ+w3675pNjyHOajN/U\nAJi8x3itfPLx3PL426BjcsSceHIxH3rp9VT8J6EpQI8BiyrkyTv93DTzXwv1hTcv\nvI+2cdTt2vO2Kj+ta9b5SMMapyfudnvjqIpK79JHEZvt+F2oqg1UUYl4fJVbPPM/\nQmkVDysnLFFQzvau6NHdb39efT/Je0w54eQ1/aRCjF8kZ0+xlJ+plI51OcuT5YDJ\n6T2BP10pAgMBAAECggEAXutI/GSLi6YWfhSqCP3A5b9MzYFDIK8BdcaI8DlGzkow\noX5kGPIZr4BmzAwPycW7EgGBbKMNftNd97QYS5NA+WGHpMF99JmBHsAt3GerMUCe\ntM2E7BVz7CphtvBzvZtOafNd5tQobR6UrTZHAx8A6IOMsoszbmIcnsStvfCV/FD+\nUf4EUVwdtD/W8oKU8TTVQJkn+lBpdXLC/4gJMhq2ENOOc9e5yzrmLkvwvZXF5+pl\nGWDs+kr553DZle/d/TM1Z3BCJE6DuMeRiyBSvz0XpfqwS2sq8BSsqqjCY4Wqd+h7\nB6MmpKkdgbazsgaSEsGEnJPeFqQ8r3RKpuxmq/BlCQKBgQDyKHHjat84HUYgvf35\n8cYPxbo1/EIb3obinBsc6zLW2oluNvHZL7ua7gnxsaXLP8o9xupYFKAimUG63szz\npsJHEXe1BomIqgG9u8qclSZH/qHq58/9svFHPSITRZG3vvziM85gFuEgYbgqx+qr\nz4FXdgDq1rwj5q+T0XwMhGubKwKBgQDJErIXiux2YbTeLQ89CUppzxpOFn9cN6W0\nwaGpcW+tUSA3Dm1o5PDchpZRuBql8sih1X+jMpn7RZfj4vcY0HFrubQS/x4dfsgx\nJ/e+uh1m0ivkFaet/STjGHzI8VQ+x9w9mFH90m/b6dAjkuZ28aelVH6gG8Wv6dFU\nB+qWiVWu+wKBgQDJdiKB2/jHW3trZAU2+xEXMB3iKfLp8rDvOIZKAday7u8lFWsR\nkGeY1m7JeE0Bkhl0Wde+3bH39t67U/7YuiSpMXwQy9aCL0Xxjplaua82eD5HCwJ8\nA3I+HTsLI3a+kpMasZUBVieHZCTu2pF+zMzDcbYDqhCuIY5zAPYeB9DqLwKBgHPK\nHFyKV9lkMq+u6xOPAhckeFV3hygns3j/+ISHGnSIPzD1UfQRwtJ7fpzYlB/0S61G\nMRZd0WZtkSZeUUUs4+PRMO2vlDwQAmCsT3K54qyPY08ZWVJMcK2GMHXW41iz5xRh\nXvX39QqC/qU9txHP32bJ3ZF97L18vFrTpDfEJl95AoGBAJ3X/s9msK2Zgg48ip5O\nG0dnQzLbwEPwM/ONniNN1Cj8/S4wI7FqaNGHnIsXk9U/ZsfqB68gixVeU7gw12dO\nUENdZkqsd2fqaSPoWbZivExj5csIboW1A8gVd/u1fF53bgH9QvKQ9WUzZ5LNDKyL\nKyGQ30YL4+Hl+6LJ+kbsmvP3\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@mri-image-viewer.iam.gserviceaccount.com",
+  "client_id": "105305492197932979571",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40mri-image-viewer.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
