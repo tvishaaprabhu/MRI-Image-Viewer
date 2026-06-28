@@ -8,85 +8,84 @@ import pydicom
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
+# Import the database helpers we just built!
+import auth 
+
 st.set_page_config(layout="wide")
 
-# --- AUTHENTICATION SETUP ---
-if "user_credentials" not in st.session_state:
-    st.session_state["user_credentials"] = {
-        "admin": "password123",
-        "doctor1": "med123"
-    }
+# --- AUTHENTICATION ROUTING ---
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+if "auth_mode" not in st.session_state:
+    st.session_state.auth_mode = "login"
 
-def check_password():
-    def password_entered():
-        user = st.session_state["username"]
-        pwd = st.session_state["password"]
-        if user in st.session_state["user_credentials"] and st.session_state["user_credentials"][user] == pwd:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]
-        else:
-            st.session_state["password_correct"] = False
+def switch_to_reset():
+    st.session_state.auth_mode = "reset"
 
-    def change_password():
-        user = st.session_state["change_username"]
-        old_pwd = st.session_state["old_password"]
-        new_pwd = st.session_state["new_password"]
-        confirm_pwd = st.session_state["confirm_password"]
-        if user not in st.session_state["user_credentials"]:
-            st.session_state["change_error"] = "Username not found."
-        elif st.session_state["user_credentials"][user] != old_pwd:
-            st.session_state["change_error"] = "Old password is incorrect."
-        elif new_pwd != confirm_pwd:
-            st.session_state["change_error"] = "New passwords do not match."
-        elif len(new_pwd) < 6:
-            st.session_state["change_error"] = "Password must be at least 6 characters."
-        else:
-            st.session_state["user_credentials"][user] = new_pwd
-            st.session_state["change_success"] = True
-            st.session_state["change_error"] = None
-            st.session_state["show_change"] = False
+def switch_to_login():
+    st.session_state.auth_mode = "login"
 
-    if "show_change" not in st.session_state:
-        st.session_state["show_change"] = False
+# If the user is NOT logged in, show the login screens and STOP the app
+if not st.session_state.authenticated:
+    st.title("Welcome to the Medical Image Viewer")
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.session_state.auth_mode == "login":
+            st.subheader("System Login")
+            with st.form("login_form"):
+                email = st.text_input("Email Address")
+                password = st.text_input("Password", type="password")
+                submitted = st.form_submit_button("Log In")
+                
+                if submitted:
+                    # Call the Firebase helper!
+                    success, message, role = auth.authenticate_user(email, password)
+                    if success:
+                        st.session_state.authenticated = True
+                        st.session_state.current_user = email
+                        st.session_state.role = role
+                        st.rerun()
+                    else:
+                        st.error(message)
+            
+            st.button("Forgot Password?", on_click=switch_to_reset)
 
-    if st.session_state["show_change"]:
-        st.title("Change Password")
-        st.text_input("Username", key="change_username")
-        st.text_input("Old Password", type="password", key="old_password")
-        st.text_input("New Password", type="password", key="new_password")
-        st.text_input("Confirm New Password", type="password", key="confirm_password")
-        st.button("Change Password", on_click=change_password)
-        if st.session_state.get("change_error"):
-            st.error(st.session_state["change_error"])
-        if st.button("Back to Login"):
-            st.session_state["show_change"] = False
-        return False
-
-    st.title("Login to Image Viewer")
-    st.text_input("Username", key="username")
-    st.text_input("Password", type="password", key="password")
-    st.button("Login", on_click=password_entered)
-
-    if st.session_state.get("change_success"):
-        st.success("Password changed successfully. Please log in.")
-        st.session_state["change_success"] = False
-
-    if "password_correct" not in st.session_state:
-        if st.button("Change Password?"):
-            st.session_state["show_change"] = True
-        return False
-    elif not st.session_state["password_correct"]:
-        st.error("😕 Username or password incorrect")
-        if st.button("Change Password?"):
-            st.session_state["show_change"] = True
-        return False
-    else:
-        return True
-
-if not check_password():
+        elif st.session_state.auth_mode == "reset":
+            st.subheader("Reset Password")
+            with st.form("reset_form"):
+                reset_email = st.text_input("Enter your registered email")
+                submit_reset = st.form_submit_button("Reset Password")
+                
+                if submit_reset:
+                    success, result = auth.reset_user_password(reset_email)
+                    if success:
+                        # In a real app, you would email this 'result' (temp password)
+                        st.success("Password reset! (In production, this would be emailed).")
+                        st.code(f"Your temporary password is: {result}")
+                    else:
+                        st.error(result)
+            
+            st.button("Back to Login", on_click=switch_to_login)
+    
+    # st.stop() prevents the rest of the code from running until authenticated
     st.stop()
 
-# --- MAIN APP ---
+
+# ==========================================
+# --- MAIN APP (ONLY RUNS IF AUTHENTICATED) ---
+# ==========================================
+
+# Sidebar Controls for Logged-In Users
+with st.sidebar:
+    st.write(f"Logged in as: **{st.session_state.current_user}**")
+    st.write(f"Role: **{st.session_state.role}**")
+    if st.button("Log Out"):
+        st.session_state.authenticated = False
+        st.session_state.current_user = None
+        st.session_state.role = None
+        st.rerun()
+
 st.title("My Streamlit Image Viewer")
 
 # --- SECTION 1: DATA UPLOADING ---
