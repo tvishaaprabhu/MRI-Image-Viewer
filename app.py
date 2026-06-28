@@ -8,14 +8,15 @@ import pydicom
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
-# Import your custom modules
+# --- CUSTOM MODULES ---
 import auth
 import admin
 
-st.set_page_config(layout="wide")
+# Must be the first Streamlit command
+st.set_page_config(page_title="Medical Image Viewer", layout="wide")
 
 # ==========================================
-# --- AUTHENTICATION ROUTING ---
+# --- 1. SESSION STATE INITIALIZATION ---
 # ==========================================
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
@@ -28,6 +29,9 @@ def switch_to_reset():
 def switch_to_login():
     st.session_state.auth_mode = "login"
 
+# ==========================================
+# --- 2. AUTHENTICATION GATEWAY ---
+# ==========================================
 # If the user is NOT logged in, show the login screens and STOP the app
 if not st.session_state.authenticated:
     st.title("Welcome to the Medical Image Viewer")
@@ -70,20 +74,20 @@ if not st.session_state.authenticated:
             
             st.button("Back to Login", on_click=switch_to_login)
     
-    # st.stop() prevents the rest of the code from running until authenticated
+    # This stops any of the image viewer code below from running or rendering
     st.stop()
 
 
 # ==========================================
-# --- MAIN APP (ONLY RUNS IF AUTHENTICATED) ---
+# --- 3. MAIN APPLICATION ROUTING ---
 # ==========================================
 
-# Sidebar Controls for Logged-In Users
+# --- Sidebar Controls ---
 with st.sidebar:
     st.write(f"Logged in as: **{st.session_state.current_user}**")
     st.write(f"Role: **{st.session_state.role}**")
     
-    # NAVIGATION (Only show if Admin)
+    # NAVIGATION (Only show to Admins)
     if st.session_state.role == "Admin":
         st.divider()
         app_mode = st.radio("Navigation", ["Image Viewer", "Admin Dashboard"])
@@ -91,17 +95,20 @@ with st.sidebar:
     else:
         app_mode = "Image Viewer"
 
+    # LOGOUT
     if st.button("Log Out"):
         st.session_state.authenticated = False
         st.session_state.current_user = None
         st.session_state.role = None
         st.rerun()
 
-# --- ROUTING BASED ON SELECTION ---
+# --- Route to the correct screen ---
 if app_mode == "Admin Dashboard":
     admin.show_admin_dashboard()
 else:
-    # --- IMAGE VIEWER CODE ---
+    # ==========================================
+    # --- 4. IMAGE VIEWER MODULE ---
+    # ==========================================
     st.title("My Streamlit Image Viewer")
 
     # --- SECTION 1: DATA UPLOADING ---
