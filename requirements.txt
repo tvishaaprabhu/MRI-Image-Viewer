@@ -1,9 +1,10 @@
-matplotlib
-Pillow
 streamlit
 pandas
-opencv-python-headless
 numpy
+Pillow
+opencv-python-headless
 pydicom
 scikit-learn
 matplotlib
+firebase-admin
+bcrypt
