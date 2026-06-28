@@ -11,33 +11,74 @@ import matplotlib.pyplot as plt
 st.set_page_config(layout="wide")
 
 # --- AUTHENTICATION SETUP ---
-USER_CREDENTIALS = {
-    "admin": "password123",
-    "doctor1": "med123"
-}
+if "user_credentials" not in st.session_state:
+    st.session_state["user_credentials"] = {
+        "admin": "password123",
+        "doctor1": "med123"
+    }
 
 def check_password():
     def password_entered():
         user = st.session_state["username"]
         pwd = st.session_state["password"]
-        if user in USER_CREDENTIALS and USER_CREDENTIALS[user] == pwd:
+        if user in st.session_state["user_credentials"] and st.session_state["user_credentials"][user] == pwd:
             st.session_state["password_correct"] = True
             del st.session_state["password"]
         else:
             st.session_state["password_correct"] = False
 
+    def change_password():
+        user = st.session_state["change_username"]
+        old_pwd = st.session_state["old_password"]
+        new_pwd = st.session_state["new_password"]
+        confirm_pwd = st.session_state["confirm_password"]
+        if user not in st.session_state["user_credentials"]:
+            st.session_state["change_error"] = "Username not found."
+        elif st.session_state["user_credentials"][user] != old_pwd:
+            st.session_state["change_error"] = "Old password is incorrect."
+        elif new_pwd != confirm_pwd:
+            st.session_state["change_error"] = "New passwords do not match."
+        elif len(new_pwd) < 6:
+            st.session_state["change_error"] = "Password must be at least 6 characters."
+        else:
+            st.session_state["user_credentials"][user] = new_pwd
+            st.session_state["change_success"] = True
+            st.session_state["change_error"] = None
+            st.session_state["show_change"] = False
+
+    if "show_change" not in st.session_state:
+        st.session_state["show_change"] = False
+
+    if st.session_state["show_change"]:
+        st.title("Change Password")
+        st.text_input("Username", key="change_username")
+        st.text_input("Old Password", type="password", key="old_password")
+        st.text_input("New Password", type="password", key="new_password")
+        st.text_input("Confirm New Password", type="password", key="confirm_password")
+        st.button("Change Password", on_click=change_password)
+        if st.session_state.get("change_error"):
+            st.error(st.session_state["change_error"])
+        if st.button("Back to Login"):
+            st.session_state["show_change"] = False
+        return False
+
+    st.title("Login to Image Viewer")
+    st.text_input("Username", key="username")
+    st.text_input("Password", type="password", key="password")
+    st.button("Login", on_click=password_entered)
+
+    if st.session_state.get("change_success"):
+        st.success("Password changed successfully. Please log in.")
+        st.session_state["change_success"] = False
+
     if "password_correct" not in st.session_state:
-        st.title("Login to Image Viewer")
-        st.text_input("Username", key="username")
-        st.text_input("Password", type="password", key="password")
-        st.button("Login", on_click=password_entered)
+        if st.button("Change Password?"):
+            st.session_state["show_change"] = True
         return False
     elif not st.session_state["password_correct"]:
-        st.title("Login to Image Viewer")
-        st.text_input("Username", key="username")
-        st.text_input("Password", type="password", key="password")
-        st.button("Login", on_click=password_entered)
         st.error("😕 Username or password incorrect")
+        if st.button("Change Password?"):
+            st.session_state["show_change"] = True
         return False
     else:
         return True
