@@ -9,6 +9,43 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
+
+# --- AUTHENTICATION SETUP ---
+USER_CREDENTIALS = {
+    "admin": "password123",
+    "doctor1": "med123"
+}
+
+def check_password():
+    def password_entered():
+        user = st.session_state["username"]
+        pwd = st.session_state["password"]
+        if user in USER_CREDENTIALS and USER_CREDENTIALS[user] == pwd:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.title("Login to Image Viewer")
+        st.text_input("Username", key="username")
+        st.text_input("Password", type="password", key="password")
+        st.button("Login", on_click=password_entered)
+        return False
+    elif not st.session_state["password_correct"]:
+        st.title("Login to Image Viewer")
+        st.text_input("Username", key="username")
+        st.text_input("Password", type="password", key="password")
+        st.button("Login", on_click=password_entered)
+        st.error("😕 Username or password incorrect")
+        return False
+    else:
+        return True
+
+if not check_password():
+    st.stop()
+
+# --- MAIN APP ---
 st.title("My Streamlit Image Viewer")
 
 # --- SECTION 1: DATA UPLOADING ---
