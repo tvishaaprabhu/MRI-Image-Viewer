@@ -1,0 +1,12 @@
+[firebase]
+type = "service_account"
+project_id = "mri-image-viewer"
+private_key_id = "11b7724b03927ff90efc826a7e33737d7815a5d6"
+private_key = "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQD6QV0pIWSUHNVj\nMtHDGkUpeSAp3PKtI0JMhs1gKUr0omgxrREUJmPnfOD2Uh46SWdGnB28TLhwc2eF\nAH8yNaQ1pHvuDSEJTtEsxYJWeE4clvUMSzf6sN1EFqxgXxsnlLwejzihmD4dSp3q\nAt9PGxQBmKRUk2hsPr3o4QDwe4mZrbcTdhfChWFpLL+YZlzhU74Iv9E3yP5GBLYn\nG9PB45N3NOU+Cb+F99rFsxjYY87H5TtzvHhtJq9ifqCmH6VCW4uflXjImqTQzDVV\nrGY2orh2jt9YpwJbQvTPg6qk+QrIjYc9UmP/apJWFiJzJhjig+ur5GgIwx5mEp3e\nuPfSlGoXAgMBAAECggEADtt26fG1vxtadH9jDQe6vRnCqz7sWL4ZT2IeFaGYoHR3\nO3fFu0yvgrdFwyn16cpLgNl/jxso72LSmFwCsTBBFamJwq9x235xPwy3eRBpvBse\n5OzJn9mvO+hyscKuYd0GhslETfJewa4ZOPg/BLsb/B+b+09zFCDCH+4ieE8v8051\nsab7+qVok/I+40dqAHEhjJxFjX4aXy9lB6tN+KseLSYYTtMXYDefeQbOhq9/4jW9\nSsPLEwK60rDBG8oczKdKi596XiM9SbmXcB89gRs7jdZ+uoYSpvn5//MyaU1vwMcw\nQNoY1nPXAMC5uwtksVuuQYXm+QK/Bw+wJiYPG2wJ2QKBgQD9s010kCP/xP6OIfYA\nnGNtKGsty13QQQzv0uINpXu1zQj8CQwG0Bi77n0tGg4QDtMVv8G4PFcnUCsvu6C/\nBsp6ytMSKRoG+JdWWBxO9TbRTZ1GFDeg55jGvYa0kp2LcgYy9kDnWW9mpjtWtg4v\nUG3VahrRB4j/2tk3PXbSR5IkuQKBgQD8hhE3b9R56FWdoQ39B0/2I55Uax1MLcEu\n3PiPpRciQtfvxRnpqf7auKm9XngNixfyuNqN6eryRWOmqD8xO7QItgJjRVVWwTJq\nONVBdm0e345ws/uXNCFs2upIzIDdnrt1kUuxUIXWhPDcRLvnSL5O2Yu1lWU8IbTo\nUB5esBM9TwKBgDaaFYyFzUmqA0Nh6ck932RJ869aeqlsprUjBQX83MBHDaz44X7B\n4ODptkUzu10XY7TlnXLigbtzVKgkULdsZb3B02WwNOrVK/UoZ4dS3WZ0tumzRjm6\nPrZfahOJDqFJfC4Rs+xW4lQMaO8Dpc/nFox9FqJwZbrzRhbOgrlFMB35AoGARrOO\nrHPODJfFKM4H6ZkbhTGxybb3y/VfiixqF2XElV4bsVEBEU/8P+bF93Q0rq4L9XRW\nFLeyhURyQx4GG1W48VtsTbkCzLho0h65boumv6cd7WYnAc2hsiWUxO8lAWfI2oDk\nrW97GXW9Lh68cWQHjHISULPUVUKmsQiFiENKD7cCgYB35H5J6zmfBL+7zSa8ca9+\nQ7GZcZ4msjyhYNT8tCoLNu1lTer9Oo8Q7j5amcuCkP+fUEMN6K6EMphQVBPXYFGI\nqtXX+K9cx+covQq6pd2jNB+wQ0PC7/iP4/ccqQr+r853CrLkpgijl068Rus3oIJ2\nA1fIg4NgJYGNwePprcgL9w==\n-----END PRIVATE KEY-----\n"
+client_email = "firebase-adminsdk-fbsvc@mri-image-viewer.iam.gserviceaccount.com"
+client_id = "105305492197932979571"
+auth_uri = "https://accounts.google.com/o/oauth2/auth"
+token_uri = "https://oauth2.googleapis.com/token"
+auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
+client_x509_cert_url = "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40mri-image-viewer.iam.gserviceaccount.com"
+universe_domain = "googleapis.com"
