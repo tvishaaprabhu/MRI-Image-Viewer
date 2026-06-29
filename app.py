@@ -17,7 +17,7 @@ from firebase_admin import credentials, firestore
 import bcrypt
 
 cred = credentials.Certificate("mri-image-viewer-firebase-adminsdk-fbsvc-0771552c59.json")
-firebase_admin.initialize_app(cred)
+# firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 users = db.collection("users").stream()
