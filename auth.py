@@ -7,12 +7,10 @@ import string
 
 # --- 1. INITIALIZATION ---
 def init_connection():
-    """Initializes the Firebase connection securely."""
-    if not firebase_admin._apps:
+    if not len(firebase_admin._apps):
         cred_dict = dict(st.secrets["firebase"])
         cred = credentials.Certificate(cred_dict)
         firebase_admin.initialize_app(cred)
-    
     return firestore.client()
 
 # Initialize database client
