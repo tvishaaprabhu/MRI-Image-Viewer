@@ -8,11 +8,9 @@ import pydicom
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
-# --- CUSTOM MODULES ---
 import auth
 import admin
 
-# Must be the first Streamlit command
 st.set_page_config(page_title="Medical Image Viewer", layout="wide")
 
 # ==========================================
@@ -32,10 +30,9 @@ def switch_to_login():
 # ==========================================
 # --- 2. AUTHENTICATION GATEWAY ---
 # ==========================================
-# If the user is NOT logged in, show the login screens and STOP the app
 if not st.session_state.authenticated:
     st.title("Welcome to the Medical Image Viewer")
-    
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.session_state.auth_mode == "login":
@@ -44,9 +41,8 @@ if not st.session_state.authenticated:
                 email = st.text_input("Email Address")
                 password = st.text_input("Password", type="password")
                 submitted = st.form_submit_button("Log In")
-                
+
                 if submitted:
-                    # Call the Firebase helper
                     success, message, role = auth.authenticate_user(email, password)
                     if success:
                         st.session_state.authenticated = True
@@ -55,7 +51,7 @@ if not st.session_state.authenticated:
                         st.rerun()
                     else:
                         st.error(message)
-            
+
             st.button("Forgot Password?", on_click=switch_to_reset)
 
         elif st.session_state.auth_mode == "reset":
@@ -63,31 +59,26 @@ if not st.session_state.authenticated:
             with st.form("reset_form"):
                 reset_email = st.text_input("Enter your registered email")
                 submit_reset = st.form_submit_button("Reset Password")
-                
+
                 if submit_reset:
                     success, result = auth.reset_user_password(reset_email)
                     if success:
-                        st.success("Password reset! (In production, this would be emailed).")
+                        st.success("Password reset!")
                         st.code(f"Your temporary password is: {result}")
                     else:
                         st.error(result)
-            
-            st.button("Back to Login", on_click=switch_to_login)
-    
-    # This stops any of the image viewer code below from running or rendering
-    st.stop()
 
+            st.button("Back to Login", on_click=switch_to_login)
+
+    st.stop()
 
 # ==========================================
 # --- 3. MAIN APPLICATION ROUTING ---
 # ==========================================
-
-# --- Sidebar Controls ---
 with st.sidebar:
     st.write(f"Logged in as: **{st.session_state.current_user}**")
     st.write(f"Role: **{st.session_state.role}**")
-    
-    # NAVIGATION (Only show to Admins)
+
     if st.session_state.role == "Admin":
         st.divider()
         app_mode = st.radio("Navigation", ["Image Viewer", "Admin Dashboard"])
@@ -95,14 +86,12 @@ with st.sidebar:
     else:
         app_mode = "Image Viewer"
 
-    # LOGOUT
     if st.button("Log Out"):
         st.session_state.authenticated = False
         st.session_state.current_user = None
         st.session_state.role = None
         st.rerun()
 
-# --- Route to the correct screen ---
 if app_mode == "Admin Dashboard":
     admin.show_admin_dashboard()
 else:
@@ -111,7 +100,6 @@ else:
     # ==========================================
     st.title("My Streamlit Image Viewer")
 
-    # --- SECTION 1: DATA UPLOADING ---
     st.header("1. Upload Image")
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png", "webp", "dcm"])
 
