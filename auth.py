@@ -6,6 +6,7 @@ import random
 import string
 
 # --- 1. INITIALIZATION ---
+@st.cache_resource
 def init_connection():
     if not len(firebase_admin._apps):
         cred_dict = dict(st.secrets["firebase"])
